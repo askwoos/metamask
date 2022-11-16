@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+
+<body>
+    <p>1. 버튼을클릭하면 메타마스크 지갑이 있는지 체크합니다.</p>
+    <button onclick="hasMetamask()">Click me</button>
+    <p id ='hasmetamask'>버튼을클릭하세요</p>
+
+    <p>1. 버튼을클릭하면 메타마스크를 띄웁니다. </p>
+    <button onclick="loginWithMetaMask()">Click me</button>
+    <p id ='showmetamask'>버튼을클릭하세요</p>
+    
+
+    <button id='loginButton' onclick="" class="mx-auto rounded-md p-2 bg-purple-500 text-white">
+        Login with MetaMask
+      </button>
+
+      
+   
+
+    <script>
+     //1. 메타마스크가 있는지 확인
+
+        function hasMetamask() {
+            if (!window.ethereum) {
+                document.getElementById("hasmetamask").innerHTML = "메타마스크가 없습니다.";
+            } else {
+                document.getElementById("hasmetamask").innerHTML = "메타마스크가 있습니다.";
+                loginButton.addEventListener('click', loginWithMetaMask)
+
+
+            }
+        }
+        //
+        async function loginWithMetaMask() {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+            .catch((e) => {
+            console.error(e.message)
+            return
+            })
+        if (!accounts) { return }
+
+        window.userWalletAddress = accounts[0]
+        userWallet.innerText = window.userWalletAddress
+        loginButton.innerText = 'Sign out of MetaMask'
+
+        loginButton.removeEventListener('click', loginWithMetaMask)
+        setTimeout(() => {
+            loginButton.addEventListener('click', signOutOfMetaMask)
+        }, 200)
+        }
+
+
+
+
+
+
+    
+
+
+    </script>
+</body>
+</html>

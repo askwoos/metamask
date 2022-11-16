@@ -1,0 +1,133 @@
+<!-- 참고 
+https://github.com/pragathoys/web3-simple-login-with-metamask
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Web3 Login process with MetaMask</title>
+        <script src="https://cdn.ethers.io/lib/ethers-5.6.4.umd.min.js" type="application/javascript"></script>
+        
+    </head>
+    <body>
+
+        <p>1. 버튼을클릭하면 메타마스크 지갑이 있는지 체크합니다.</p>
+        <button onclick="web3_check_metamask()">Detect MetaMask</button>
+        <p id ='hasmetamask'>버튼을클릭하세요</p>
+
+
+        <p>2. 메타마스크 로그인합니다. </p>
+        <button onclick="web3_metamask_login()">Login</button>
+        <p id ="ethaddress">이더리움 주소 </p>
+
+        <p>5. 메타마스크 내 지갑 주소에서 송금을 합니다. </p>
+
+               
+        <p>내 지갑 주소</p>
+
+        <form id="idform">
+            <input type="text" name="myaddress" id="myaddress" placeholder="내 지갑주소가 입력됩니다. ">
+        </form>
+    
+        <p>상대방 수신 지갑 주소</p>
+    
+        <form id="passform">
+            <input type="text" name="pass" id="receivingaccounts" placeholder="주소를 입력가 입력됩니다.">
+        </form>
+        
+        <p>이더리움 어마운트</p>
+
+
+        <form id="amount">
+            <input type="text" name="pass" id="ethamount" placeholder="eth 양을 입력하세요">
+        </form>
+
+
+        
+        <button id="submit">송금</button>
+
+
+        <p>6. 송금후 확인을 합니다. </p>
+
+        
+
+        
+
+        <script>
+
+        // 1. 메타마스크있는지 확인 
+
+            function web3_check_metamask() {
+                if (!window.ethereum) {
+                    document.getElementById("hasmetamask").innerHTML = "메타마스크 지갑 없음";
+                    return false;
+                }else{
+                    document.getElementById("hasmetamask").innerHTML = "메타마스크가 있습니다.";
+                    console.log('MetaMask extension has been detected!!');
+                    return true;
+                }
+            }
+            
+            function web3_metamask_hash(){
+                var hashed_string   = '';
+                var chars           = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                var total_chars     = chars.length;
+                for ( var i = 0; i < 256; i++ ) {
+                    hashed_string += chars.charAt(Math.floor(Math.random() * total_chars));
+                }
+                return hashed_string;                
+            }
+            
+
+            //2 메타마스크 띄우기  
+
+            async function web3_metamask_login() {
+                // Check first if the user has the MetaMask installed
+                if ( web3_check_metamask() ) {
+                    console.log('Initate Login Process');
+
+                    // Get the Ethereum provider
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);                    
+                    // Get Ethereum accounts
+                    await provider.send("eth_requestAccounts", []);
+                    console.log("Connected!!"); 
+                    // Get the User Ethereum address
+                    const address = await provider.getSigner().getAddress();
+                    console.log(address);    
+                    document.getElementById("ethaddress").innerHTML = address;
+                    document.getElementById("myaddress").value = address;
+
+  
+
+                    // Create hashed string 
+                    const hashed_string = web3_metamask_hash();      
+                    console.log("Hashed string: " + hashed_string);   
+                    // Request the user to sign it
+                    const signature = await provider.getSigner().signMessage(hashed_string);
+                    // Got the signature
+                    console.log("The signature: " + signature);   
+
+                    // TODO
+                    // you can then send the signature to the webserver for further processing and verification 
+                }
+            } 
+            
+            // 3. 지갑 송금
+            document.getElementById('submit').onclick = function() {
+            var myeth = document.getElementById('myaddress').value;
+            var hiseth = document.getElementById('receivingaccounts').value;
+            document.getElementById("ethaddress").innerHTML = myeth;
+
+            console.log("sadfsadf");
+
+                alert("송금 성공!");
+            
+             }
+    
+                
+        </script>
+
+    </body>
+</html>
