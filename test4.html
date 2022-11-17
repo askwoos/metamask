@@ -9,7 +9,8 @@ https://github.com/pragathoys/web3-simple-login-with-metamask
         <meta charset="utf-8">
         <title>Web3 Login process with MetaMask</title>
         <script src="https://cdn.ethers.io/lib/ethers-5.6.4.umd.min.js" type="application/javascript"></script>
-        
+                <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+
     </head>
     <body>
 
@@ -27,22 +28,26 @@ https://github.com/pragathoys/web3-simple-login-with-metamask
                
         <p>내 지갑 주소</p>
 
-        <form id="idform">
             <input type="text" name="myaddress" id="myaddress" placeholder="내 지갑주소가 입력됩니다. ">
-        </form>
+        
     
         <p>상대방 수신 지갑 주소</p>
     
-        <form id="passform">
-            <input type="text" name="pass" id="receivingaccounts" placeholder="주소를 입력가 입력됩니다.">
-        </form>
+            <input type="text" name="pass" id="receivingaccounts" placeholder="주소를 입력가 입력됩니다.">0x274b35a273040Ca0D1C98d3b926a82Fc148FFC75
+       
         
         <p>이더리움 어마운트</p>
 
 
-        <form id="amount">
-            <input type="text" name="pass" id="ethamount" placeholder="eth 양을 입력하세요">
-        </form>
+            <input type="text" name="pass" id="ethamount" placeholder="eth 양을 입력하세요">3000000000000000
+         
+
+        <div>
+            <div class="btext">
+                <a href="#" class="btneth">Donate with MetaMask</a>
+            <div class="message"></div>
+        </div>
+
 
 
         
@@ -56,6 +61,9 @@ https://github.com/pragathoys/web3-simple-login-with-metamask
         
 
         <script>
+
+
+
 
         // 1. 메타마스크있는지 확인 
 
@@ -114,20 +122,72 @@ https://github.com/pragathoys/web3-simple-login-with-metamask
                 }
             } 
             
+            
+                
+        </script>
+    
+        
+            <script>
+             // 이더송금보내기 
+
+                var tipButton = document.querySelector('.btneth')
+
+                tipButton.addEventListener('click', async function() 
+                    {
+                    if (typeof web3 === 'undefined') 
+                        {
+                        return renderMessage('<div>You need to install <a href=“https://metmask.io“>MetaMask </a> to use this feature.  <a href=“https://metmask.io“>https://metamask.io</a></div>')
+                        }
+
+                    
+                    web3 = new Web3(window.ethereum)
+                        window.ethereum.enable().catch(error => {
+                    console.log(error)
+                    })
+                    
+                    var user_address = await web3.eth.getAccounts()
+                    console.log(user_address[0])
+
+                    web3.eth.sendTransaction(
+                        {
+                        to: document.getElementById('receivingaccounts').value,
+                        from: user_address[0],
+                        value: document.getElementById('ethamount').value                        
+                        }, 
+                        function (err, transactionHash) 
+                            {
+                            if (err) return renderMessage('There was a problem!: ' + err.message)
+                            renderMessage('송금되었습니다!!')
+                            console.log(document.getElementById('ethamount').value)
+                        })
+                    })
+
+                    console.log(document.getElementById('ethamount').value)
+
+
+
+                function renderMessage (message) 
+                    {
+                    var messageEl = document.querySelector('.message')
+                    messageEl.innerHTML = message
+                    }
+
+            </script>
+
+
+            <script>
             // 3. 지갑 송금
             document.getElementById('submit').onclick = function() {
             var myeth = document.getElementById('myaddress').value;
             var hiseth = document.getElementById('receivingaccounts').value;
             document.getElementById("ethaddress").innerHTML = myeth;
-
-            console.log("sadfsadf");
-
-                alert("송금 성공!");
             
-             }
-    
-                
-        </script>
+            </script>
+
+
+
+
+
 
     </body>
 </html>
